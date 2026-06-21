@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invia Background - Horde Vampiri</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --blood-red: #800000;
+            --bright-crimson: #cc0000;
+            --dark-void: #0d0404;
+            --panel-bg: rgba(18, 7, 7, 0.92);
+            --text-light: #e3dadb;
+            --text-dim: #a69495;
+            --border-glow: #540c0c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-void);
+            background: linear-gradient(to bottom, rgba(13, 4, 4, 0.88), rgba(13, 4, 4, 0.96)), url('banner.png') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 30px 20px 10px 20px;
+        }
+
+        .logo {
+            max-width: 160px;
+            height: auto;
+            filter: drop-shadow(0 0 12px rgba(204, 0, 0, 0.5));
+            transition: transform 0.4s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.03);
+        }
+
+        /* Allineamento e Centratura Contenuti Principali - Ampliato a 1250px per usare tutta la finestra */
+        .main-wrapper {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 0 30px rgba(128, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 40px;
+            width: 100%;
+            height: auto;
+            backdrop-filter: blur(6px);
+            text-align: center;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--bright-crimson);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+            margin-bottom: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        p.subtitle {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            overflow-wrap: anywhere;
+        }
+
+        /* Contenitore posizionamento alto per il tasto login amministrativo */
+        .top-action-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed rgba(84, 12, 12, 0.3);
+            padding-bottom: 10px;
+        }
+
+        /* Form ed Elementi di Input */
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .guide-text {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: block;
+            line-height: 1.4;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], textarea {
+            width: 100%;
+            background-color: rgba(10, 3, 3, 0.85);
+            border: 1px solid #421616;
+            color: var(--text-light);
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--bright-crimson);
+            box-shadow: 0 0 12px rgba(204, 0, 0, 0.45);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        /* Pulsanti d'Azione Ottimizzati contro il restringimento e tagli di testo */
+        .btn {
+            background: linear-gradient(135deg, var(--blood-red), #4d0000);
+            color: #ffffff;
+            border: 1px solid var(--bright-crimson);
+            padding: 15px 30px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, var(--bright-crimson), var(--blood-red));
+            box-shadow: 0 0 20px var(--bright-crimson);
+        }
+
+        .btn:disabled {
+            background: #241414;
+            border-color: #3d2424;
+            color: #5c4c4c;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .nav-link-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: underline;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--bright-crimson);
+        }
+
+        /* Banners e Stati di Avanzamento */
+        .status-banner {
+            padding: 18px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            overflow-wrap: anywhere;
+        }
+
+        .status-da_revisionare {
+            background-color: rgba(230, 161, 0, 0.15);
+            border: 1px solid #e6a100;
+            color: #ffb700;
+        }
+
+        .status-approvato {
+            background-color: rgba(0, 179, 89, 0.15);
+            border: 1px solid #00b359;
+            color: #00ff80;
+        }
+
+        .status-da_modificare {
+            background-color: rgba(204, 0, 0, 0.15);
+            border: 1px solid var(--bright-crimson);
+            color: #ff4d4d;
+        }
+
+        .feedback-box {
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 4px solid var(--bright-crimson);
+            padding: 15px;
+            margin-top: 15px;
+            font-style: italic;
+            text-align: left;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        /* BOX VOCE UNIVERSALE */
+        .voice-box {
+            background: rgba(10, 3, 3, 0.6);
+            border: 1px solid rgba(84, 12, 12, 0.5);
+            border-left: 3px solid var(--blood-red);
+            padding: 16px;
+            margin-bottom: 14px;
+            border-radius: 4px;
+            text-align: left;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .voice-box strong {
+            color: var(--bright-crimson);
+            font-family: 'Cinzel', serif;
+            display: block;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+            letter-spacing: 0.8px;
+        }
+
+        .voice-box p {
+            font-size: 0.95rem;
+            color: #e0d5d5;
+            white-space: pre-line;
+        }
+
+        /* Dashboard di Controllo GM e Scrollbar Intelligente */
+        .gm-dashboard {
+            text-align: left;
+        }
+
+        .gm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--blood-red);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .gm-header h2 {
+            margin-bottom: 0;
+        }
+
+        /* Contenitore ad altezza fissa per i GM (fino a 5 elementi visibili insieme) */
+        .gm-scroll-container {
+            max-height: 580px;
+            overflow-y: auto;
+            padding-right: 12px;
+        }
+
+        /* Barra di scorrimento gotica */
+        .gm-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .gm-scroll-container::-webkit-scrollbar-track {
+            background: rgba(10, 3, 3, 0.5);
+            border-radius: 4px;
+        }
+        .gm-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--blood-red);
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.5);
+        }
+        .gm-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: var(--bright-crimson);
+        }
+
+        .bg-item {
+            background: rgba(10, 3, 3, 0.75);
+            border: 1px solid #331414;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Struttura Intestazione GM - Previene lo schiacciamento del pulsante "Visualizza" */
+        .bg-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .bg-item-info {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .bg-item h3 {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 3px;
+        }
+
+        .bg-meta {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 0;
+            padding-bottom: 0;
+            overflow-wrap: anywhere;
+        }
+
+        /* Blocco dettagli ad espansione dinamica */
+        .gm-extended-details {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(128, 0, 0, 0.3);
+        }
+
+        .gm-actions {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid #240c0c;
+        }
+
+        .gm-buttons-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .gm-buttons-group .btn {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #00592d, #002b16);
+            border-color: #008040;
+        }
+        .btn-approve:hover {
+            background: linear-gradient(135deg, #008040, #00592d);
+            box-shadow: 0 0 15px #00ff80;
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #590000, #2b0000);
+            border-color: var(--bright-crimson);
+        }
+        .btn-reject:hover {
+            background: linear-gradient(135deg, var(--bright-crimson), #590000);
+            box-shadow: 0 0 15px var(--bright-crimson);
+        }
+
+        /* POP-UP MODALE CRONACHE */
+        .custom-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 2, 2, 0.88);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-popup-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .custom-popup-card {
+            background: var(--panel-bg);
+            border: 2px solid var(--blood-red);
+            box-shadow: 0 0 40px rgba(204, 0, 0, 0.45);
+            padding: 35px;
+            border-radius: 6px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.85);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow-wrap: anywhere;
+        }
+
+        .custom-popup-overlay.active .custom-popup-card {
+            transform: scale(1);
+        }
+
+        .custom-popup-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .custom-popup-card p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        /* Elementi di Utilita */
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(84, 12, 12, 0.25);
+            background-color: rgba(6, 2, 2, 0.95);
+        }
+
+        @media (max-width: 768px) {
+            .card { padding: 25px 15px; }
+            .gm-buttons-group { flex-direction: column; }
+            .bg-item-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .bg-item-header .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <style>
+    /* Reset e overlay a tutto schermo */
+    #schermata-manutenzione {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0b0f19;
+        background-image: 
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+            radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%),
+            radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
+        z-index: 999999;
+        display: none; /* Gestito in tempo reale dallo script tramite il file status.txt */
+        justify-content: center;
+        align-items: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #f3f4f6;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 24px;
+    }
+
+    /* Card centrale minimale (effetto Glassmorphism) */
+    #schermata-manutenzione .card-manutenzione {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 48px 32px;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        max-width: 480px;
+        width: 100%;
+    }
+
+    /* Badge di stato superiore */
+    #schermata-manutenzione .badge-manutenzione {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        padding: 6px 14px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+    }
+
+    /* Pallino pulsante nel badge */
+    #schermata-manutenzione .badge-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        animation: pulse-dot-manutenzione 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Titolo */
+    #schermata-manutenzione .titolo-manutenzione {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin-bottom: 16px;
+        color: #ffffff;
+    }
+
+    /* Testo descrittivo */
+    #schermata-manutenzione .testo-manutenzione {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #9ca3af;
+        margin-bottom: 32px;
+    }
+
+    /* Evidenziazione nome developer */
+    #schermata-manutenzione .dev-name {
+        color: #60a5fa;
+        font-weight: 600;
+    }
+
+    /* Loader lineare */
+    #schermata-manutenzione .progress-bar-container {
+        width: 120px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin: 0 auto 32px auto;
+        overflow: hidden;
+        position: relative;
+    }
+
+    #schermata-manutenzione .progress-bar-line {
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        border-radius: 10px;
+        position: absolute;
+        animation: loading-bar-manutenzione 1.5s ease-in-out infinite;
+    }
+
+    /* Footer personalizzato */
+    #schermata-manutenzione .footer-manutenzione {
+        font-size: 0.8rem;
+        line-height: 1.5;
+        color: #6b7280;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 20px;
+    }
+    
+    #schermata-manutenzione .footer-highlight {
+        color: #9ca3af;
+    }
+
+    @keyframes loading-bar-manutenzione {
+        0% { left: -40%; }
+        50% { left: 100%; }
+        100% { left: 100%; }
+    }
+
+    @keyframes pulse-dot-manutenzione {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: .4; transform: scale(0.9); }
+    }
+</style>
+
+<div id="schermata-manutenzione">
+    <div class="card-manutenzione">
+        <div class="badge-manutenzione">
+            <span class="badge-dot"></span>
+            Aggiornamento in corso
+        </div>
+        <h1 class="titolo-manutenzione">Sito in manutenzione</h1>
+        <p class="testo-manutenzione">
+            Il developer <span class="dev-name">Vitrio</span> sta lavorando per migliorare il sito e implementare nuove funzionalità. Il servizio tornerà regolare a breve.
+        </p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-line"></div>
+        </div>
+        <div class="footer-manutenzione">
+            Vitrio - Tutti i diritti riservati<br>
+            <span class="footer-highlight">Sito in manutenzione! Torniamo a breve!</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const manutenzioneDiv = document.getElementById('schermata-manutenzione');
+        
+        function controllaStatoManutenzione() {
+            // Carica il file status.txt dal server evitando la cache del browser
+            fetch('status.txt?t=' + new Date().getTime())
+                .then(response => {
+                    if (!response.ok) throw new Error('File status non trovato');
+                    return response.text();
+                })
+                .then(stato => {
+                    const statoPulito = stato.trim().toLowerCase();
+                    
+                    if (statoPulito === 'on') {
+                        manutenzioneDiv.style.display = 'flex'; // Attiva la schermata per tutti
+                    } else {
+                        manutenzioneDiv.style.display = 'none'; // Nasconde la schermata
+                    }
+                })
+                .catch(err => {
+                    console.log('Errore controllo manutenzione:', err);
+                });
+        }
+
+        // Controllo iniziale immediato
+        controllaStatoManutenzione();
+
+        // Controllo automatico ogni 5 secondi
+        setInterval(controllaStatoManutenzione, 5000);
+    })();
+</script>
+
+    <header>
+        <img src="logo.png" alt="Sanguis Chronica Logo" class="logo">
+    </header>
+
+    <div class="main-wrapper">
+        <div class="container">
+
+            <div id="loadingPanel" class="card">
+                <div class="loading">Accesso in corso...</div>
+            </div>
+
+            <div id="bgFormPanel" class="card hidden">
+                <div class="top-action-bar">
+                    <button class="nav-link-btn" id="btnGoToLoginGM">Portale Amministrativo GM</button>
+                </div>
+
+                <div id="userStatusContainer" class="hidden"></div>
+                
+                <h2>Compila il tuo Background</h2>
+                <p class="subtitle">Tutti i campi sono obbligatori per iniziare la tua avventura.</p>
+                
+                <form id="bgForm">
+                    <div class="form-group">
+                        <label for="discordUser">Nome Utente Discord</label>
+                        <span class="guide-text">Inserisci il tuo ID utente di Discord completo (es: nomeutente o vecchio formato nome#0000) per permettere ai GM di contattarti rapidamente per i rituali.</span>
+                        <input type="text" id="discordUser" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="charName">Nome</label>
+                        <span class="guide-text">Specifica il nome completo ed eventuali pseudonimi o soprannomi del tuo personaggio prima della trasformazione.</span>
+                        <input type="text" id="charName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="shadowName">Nome Ombra</label>
+                        <span class="guide-text">Definisci il nome associato alla tua Ombra. L'Ombra rappresenta la parte più oscura, primordiale e mostruosa del vampiro; darle un nome serve a identificare quell'entità interiore con cui dovrai costante lottare o scendere a patti. Non usare nomi conosciuti, usa nomi legati anche al carattere del tuo personaggio.</span>
+                        <input type="text" id="shadowName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="history">Storia del Personaggio (Il Passato)</label>
+                        <span class="guide-text">Racconta dove è cresciuto, la sua estrazione sociale, la sua professione quando era umano e il tipo di vita che conduceva. Questo serve a dare una base solida alle sue origini.</span>
+                        <textarea id="history" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="events">Eventi Significativi</label>
+                        <span class="guide-text">Elenca almeno due o tre eventi che hanno cambiato radicalmente la vita del personaggio. Può trattarsi di un grande successo, di un trauma, di una perdita o del momento esatto in cui ha scoperto l'esistenza del sovrannaturale. Questi dettagli aiuteranno i GM a creare le prove per i tuoi rituali.</span>
+                        <textarea id="events" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrival">Arrivo sull'Isola</label>
+                        <span class="guide-text">Spiega i motivi che hanno spinto il tuo personaggio a viaggiare fino a quest'isola. È fuggito da qualcosa? È alla ricerca di qualcuno? Si tratta di un naufragio o di una chiamata del destino?</span>
+                        <textarea id="arrival" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bonds">Legami</label>
+                        <span class="guide-text">Indica se il tuo personaggio ha parenti, amici con cui ha una storia in sospeso. Se non ne ha, specifica che si tratta di un personaggio solitario.</span>
+                        <textarea id="bonds" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="character">Carattere</label>
+                        <span class="guide-text">Descrivi la psicologia del tuo personaggio. Non limitarti a "buono" o "cattivo". Spiega come reagisce davanti al pericolo, come si comporta con gli sconosciuti, se è impulsivo, calcolatore, vendicativo o empatico. Nota: questa sezione sarà fondamentale per i GM.</span>
+                        <textarea id="character" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="objectives">Obiettivi</label>
+                        <span class="guide-text">Qual è la forza motrice del tuo personaggio? Cosa vuole ottenere a breve e a lungo termine? (Es. Vendetta, potere all'interno della dinastia, protezione degli umani, conoscenza di segreti antichi).</span>
+                        <textarea id="objectives" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fears">Paure</label>
+                        <span class="guide-text">Ogni personaggio deve avere dei punti deboli. Indica quali sono le fobie fisiche o i traumi psicologici del tuo personaggio. Le paure rendono il gioco di ruolo più profondo e offrono ai GM spunti fantastici per creare incubi o indovinelli durante le quest.</span>
+                        <textarea id="fears" required></textarea>
+                    </div>
+
+                    <button type="submit" id="btnSubmitBg" class="btn">Invia background</button>
+                </form>
+            </div>
+
+            <div id="bgLockedPanel" class="card hidden">
+                <div class="top-action-bar">
+                    <button class="nav-link-btn" id="btnGoToLoginGM2">Portale Amministrativo GM</button>
+                </div>
+
+                <div id="lockedStatusBanner"></div>
+                <h2>Il tuo background è stato salvato</h2>
+                <p class="subtitle">Background ricevuto, attendi l'approvazione. Clicca qui sotto per visualizzare il tuo background.</p>
+                
+                <button id="btnTogglePlayerPreview" class="btn" style="margin-bottom: 30px; width: auto; padding: 12px 30px;">Visualizza Background</button>
+                
+                <div id="lockedContentPreview" class="hidden" style="text-align: left;"></div>
+            </div>
+
+            <div id="gmAuthPanel" class="card hidden">
+                <h2>Accesso GameMaster</h2>
+                <p class="subtitle">Schermata riservata esclusivamente ai GM.</p>
+                <div class="form-group">
+                    <label for="gmEmail">Email</label>
+                    <input type="email" id="gmEmail" value="gm@horde.it" disabled style="background-color: rgba(20,20,20,0.4); border-color: #240c0c;">
+                </div>
+                <div class="form-group">
+                    <label for="gmPassword">Password</label>
+                    <input type="password" id="gmPassword" placeholder="••••••••">
+                </div>
+                <button id="btnLoginGM" class="btn">Effettua accesso</button>
+                <button class="nav-link-btn" id="btnBackToPlayer" style="margin-top: 20px;">Torna al modulo background</button>
+            </div>
+
+            <div id="gmDashboardPanel" class="card hidden gm-dashboard">
+                <div class="gm-header">
+                    <h2>Archivio Background</h2>
+                    <button class="btn" id="btnLogOutAction" style="width: auto; padding: 8px 16px; font-size: 0.8rem;">Chiudi Sessione</button>
+                </div>
+                <p class="subtitle">Esamina i background inviati dai giocatori.</p>
+
+                <div id="gmListContainer" class="gm-scroll-container">
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="customPopup" class="custom-popup-overlay">
+        <div class="custom-popup-card">
+            <h3 id="popupTitle">Decreto Antico</h3>
+            <p id="popupMessage">Contenuto della notifica...</p>
+            <button id="btnPopupClose" class="btn" style="padding: 10px 20px; font-size: 0.85rem; width: auto; min-width: 120px; margin: 0 auto;">Chiudi</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; Vitrio tutti i diritti riservati</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // CONFIGURAZIONE FIREBASE - Incolla qui le tue chiavi del progetto
+const firebaseConfig = {
+  apiKey: "AIzaSyCc0vz3ZSC6zNqsdP5IGYCMJckeycvABX8",
+  authDomain: "bg-vampiri.firebaseapp.com",
+  projectId: "bg-vampiri",
+  storageBucket: "bg-vampiri.firebasestorage.app",
+  messagingSenderId: "618361142168",
+  appId: "1:618361142168:web:a81ad9d4a530c33c6fc9ed",
+  measurementId: "G-EMHJW2WKJ5"
+};
+        // Inizializzazione Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const GM_EMAIL = 'gm@horde.it';
+        let deviceToken = '';
+        let gmSnapshotUnsubscribe = null;
+
+        // Riferimenti elementi del DOM
+        const loadingPanel = document.getElementById('loadingPanel');
+        const bgFormPanel = document.getElementById('bgFormPanel');
+        const bgLockedPanel = document.getElementById('bgLockedPanel');
+        const gmAuthPanel = document.getElementById('gmAuthPanel');
+        const gmDashboardPanel = document.getElementById('gmDashboardPanel');
+
+        const userStatusContainer = document.getElementById('userStatusContainer');
+        const lockedStatusBanner = document.getElementById('lockedStatusBanner');
+        const lockedContentPreview = document.getElementById('lockedContentPreview');
+        const btnTogglePlayerPreview = document.getElementById('btnTogglePlayerPreview');
+        const gmListContainer = document.getElementById('gmListContainer');
+        const bgForm = document.getElementById('bgForm');
+
+        // ELEMENTI DEL POP-UP CUSTOM
+        const customPopup = document.getElementById('customPopup');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupMessage = document.getElementById('popupMessage');
+        const btnPopupClose = document.getElementById('btnPopupClose');
+        let currentPopupCallback = null;
+
+        // FUNZIONE PER EMETTERE NOTIFICHE / POP-UP CUSTOM
+        function triggerChronicaAlert(title, message, callback = null) {
+            popupTitle.innerText = title;
+            popupMessage.innerText = message;
+            currentPopupCallback = callback;
+            customPopup.classList.add('active');
+        }
+
+        btnPopupClose.addEventListener('click', () => {
+            customPopup.classList.remove('active');
+            if (currentPopupCallback) {
+                currentPopupCallback();
+                currentPopupCallback = null;
+            }
+        });
+
+        // Gestione espansione e collasso visivo del background lato giocatore
+        btnTogglePlayerPreview.addEventListener('click', () => {
+            if (lockedContentPreview.classList.contains('hidden')) {
+                lockedContentPreview.classList.remove('hidden');
+                btnTogglePlayerPreview.innerText = 'Nascondi Background';
+            } else {
+                lockedContentPreview.classList.add('hidden');
+                btnTogglePlayerPreview.innerText = 'Visualizza Background';
+            }
+        });
+
+        // AGGIUNTA EVENTO INVIO TRAMITE TASTO INVIO PER IL LOGIN GM
+        document.getElementById('gmPassword').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('btnLoginGM').click();
+            }
+        });
+
+        // GESTIONE IDENTIFICAZIONE HARDWARE / BROWSER SENZA LOGIN UTENTE
+        function initDeviceIdentification() {
+            let token = localStorage.getItem('sanguis_device_uid');
+            if (!token) {
+                token = 'vmp_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36) + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('sanguis_device_uid', token);
+            }
+            deviceToken = token;
+        }
+
+        // Controllo dello stato iniziale della pagina e sessioni persistenti GM
+        auth.onAuthStateChanged(user => {
+            if (user && user.email === GM_EMAIL) {
+                switchPanel(gmDashboardPanel);
+                loadGmDashboard();
+            } else {
+                if (gmSnapshotUnsubscribe) {
+                    gmSnapshotUnsubscribe();
+                    gmSnapshotUnsubscribe = null;
+                }
+                initDeviceIdentification();
+                checkBackgroundStatus();
+            }
+        });
+
+        // Controlla se questo specifico PC ha già salvato un documento su Firestore
+        function checkBackgroundStatus() {
+            switchPanel(loadingPanel);
+            
+            if (!deviceToken) {
+                initDeviceIdentification();
+            }
+
+            db.collection('backgrounds').doc(deviceToken).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    handlePlayerBackgroundState(data);
+                } else {
+                    userStatusContainer.classList.add('hidden');
+                    switchPanel(bgFormPanel);
+                    bgForm.reset();
+                }
+            }).catch(error => {
+                console.error("Errore allineamento database: ", error);
+                switchPanel(bgFormPanel);
+            });
+        }
+
+        // Gestione Visibilità Schermate
+        function switchPanel(targetPanel) {
+            loadingPanel.classList.add('hidden');
+            bgFormPanel.classList.add('hidden');
+            bgLockedPanel.classList.add('hidden');
+            gmAuthPanel.classList.add('hidden');
+            gmDashboardPanel.classList.add('hidden');
+
+            targetPanel.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // NAVIGAZIONE INTERFACCIA INTERNA PORTALE GM
+        document.getElementById('btnGoToLoginGM').addEventListener('click', () => switchPanel(gmAuthPanel));
+        document.getElementById('btnGoToLoginGM2').addEventListener('click', () => switchPanel(gmAuthPanel));
+        document.getElementById('btnBackToPlayer').addEventListener('click', () => checkBackgroundStatus());
+
+        // ELABORAZIONE AUTOMATICA DEGLI STATI PER IL GIOCATORE CORRENTE
+        function handlePlayerBackgroundState(data) {
+            const dataInvio = data.submittedAt ? data.submittedAt.toDate().toLocaleString('it-IT') : 'Data non registrata';
+            const gmNameBadge = data.reviewedBy ? ` DA ${data.reviewedBy.toUpperCase()}` : '';
+            const gmNameMod = data.reviewedBy ? ` (da ${data.reviewedBy})` : '';
+            const gmNameNote = data.reviewedBy ? ` (${data.reviewedBy})` : '';
+            
+            if (data.status === 'da_revisionare' || data.status === 'approvato') {
+                let bannerHTML = '';
+                if(data.status === 'da_revisionare') {
+                    bannerHTML = `<div class="status-banner status-da_revisionare">Inviato il ${dataInvio} — IN FASE DI REVISIONE</div>`;
+                } else {
+                    bannerHTML = `<div class="status-banner status-approvato">Inviato il ${dataInvio} — BACKGROUND APPROVATO${gmNameMod}</div>`;
+                }
+                
+                lockedStatusBanner.innerHTML = bannerHTML;
+                renderPreview(data, lockedContentPreview);
+                
+                // Reset visualizzazione iniziale (chiusa per impostazione predefinita)
+                lockedContentPreview.classList.add('hidden');
+                btnTogglePlayerPreview.innerText = 'Visualizza Background';
+                
+                switchPanel(bgLockedPanel);
+
+            } else if (data.status === 'da_modificare') {
+                userStatusContainer.classList.remove('hidden');
+                userStatusContainer.innerHTML = `
+                    <div class="status-banner status-da_modificare">Richiesta di Modifica necessaria${gmNameMod}</div>
+                    <div class="feedback-box"><strong>Nota del Game Master${gmNameNote} da risolvere:</strong> ${data.feedback || 'Rivedi i campi compilati.'}</div>
+                    <br>
+                `;
+                populateFormFields(data);
+                switchPanel(bgFormPanel);
+            }
+        }
+
+        function populateFormFields(data) {
+            document.getElementById('discordUser').value = data.discordUser || '';
+            document.getElementById('charName').value = data.name || '';
+            document.getElementById('shadowName').value = data.shadowName || '';
+            document.getElementById('history').value = data.history || '';
+            document.getElementById('events').value = data.events || '';
+            document.getElementById('arrival').value = data.arrival || '';
+            document.getElementById('bonds').value = data.bonds || '';
+            document.getElementById('character').value = data.character || '';
+            document.getElementById('objectives').value = data.objectives || '';
+            document.getElementById('fears').value = data.fears || '';
+        }
+
+        // COSTRUZIONE DI PREVIEW STRUTTURATA IN BOX VOCE PER VOCE
+        function renderPreview(data, targetElement) {
+            targetElement.innerHTML = `
+                <div class="voice-box"><strong>Nome Utente Discord</strong><p>${data.discordUser || 'Non specificato'}</p></div>
+                <div class="voice-box"><strong>Nome Personaggio</strong><p>${data.name}</p></div>
+                <div class="voice-box"><strong>Nome Ombra</strong><p>${data.shadowName}</p></div>
+                <div class="voice-box"><strong>Storia del Personaggio (Il Passato)</strong><p>${data.history}</p></div>
+                <div class="voice-box"><strong>Eventi Significativi</strong><p>${data.events}</p></div>
+                <div class="voice-box"><strong>Arrivo sull'Isola</strong><p>${data.arrival}</p></div>
+                <div class="voice-box"><strong>Legami</strong><p>${data.bonds}</p></div>
+                <div class="voice-box"><strong>Carattere</strong><p>${data.character}</p></div>
+                <div class="voice-box"><strong>Obiettivi</strong><p>${data.objectives}</p></div>
+                <div class="voice-box"><strong>Paure</strong><p>${data.fears}</p></div>
+            `;
+        }
+
+                // --- PROTEZIONE INTERFACCIA ---
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; 
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
+        };
+
+        setInterval(function() {
+            debugger;
+        }, 100);
+
+        // SALVATAGGIO E INVIO DEFINITIVO BACKGROUND LEGATO AL DISPOSITIVO
+        bgForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!deviceToken) return;
+
+            document.getElementById('btnSubmitBg').disabled = true;
+
+            const finalPayload = {
+                deviceId: deviceToken,
+                discordUser: document.getElementById('discordUser').value.trim(),
+                name: document.getElementById('charName').value.trim(),
+                shadowName: document.getElementById('shadowName').value.trim(),
+                history: document.getElementById('history').value.trim(),
+                events: document.getElementById('events').value.trim(),
+                arrival: document.getElementById('arrival').value.trim(),
+                bonds: document.getElementById('bonds').value.trim(),
+                character: document.getElementById('character').value.trim(),
+                objectives: document.getElementById('objectives').value.trim(),
+                fears: document.getElementById('fears').value.trim(),
+                status: 'da_revisionare',
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                feedback: '',
+                reviewedBy: null
+            };
+
+            db.collection('backgrounds').doc(deviceToken).set(finalPayload)
+                .then(() => {
+                    triggerChronicaAlert('Background inviato', 'Il tuo background è stato inviato con successo.', () => {
+                        checkBackgroundStatus();
+                    });
+                })
+                .catch(error => {
+                    triggerChronicaAlert('Errore', 'Qualcosa è andato storto: ' + error.message);
+                    document.getElementById('btnSubmitBg').disabled = false;
+                });
+        });
+
+        // FLUSSO ACCESSO RISERVATO AL GENERAL MASTER
+        document.getElementById('btnLoginGM').addEventListener('click', () => {
+            const password = document.getElementById('gmPassword').value;
+
+            if (!password) {
+                triggerChronicaAlert('Accesso negato', 'Inserisci la password di accesso.');
+                return;
+            }
+
+            switchPanel(loadingPanel);
+
+            auth.signInWithEmailAndPassword(GM_EMAIL, password)
+                .then(() => {
+                    document.getElementById('gmPassword').value = '';
+                })
+                .catch(error => {
+                    triggerChronicaAlert('Respinto', 'Le arpie respingono il tuo potere: ' + error.message);
+                    switchPanel(gmAuthPanel);
+                });
+        });
+
+        document.getElementById('btnLogOutAction').addEventListener('click', () => {
+            auth.signOut();
+        });
+
+        // CARICAMENTO IN DIRETTA DEI BACKGROUND RICEVUTI
+        function loadGmDashboard() {
+            if (gmSnapshotUnsubscribe) gmSnapshotUnsubscribe();
+
+            gmSnapshotUnsubscribe = db.collection('backgrounds').orderBy('submittedAt', 'desc').onSnapshot(snapshot => {
+                gmListContainer.innerHTML = '';
+
+                if (snapshot.empty) {
+                    gmListContainer.innerHTML = '<p style="color: var(--text-dim); text-align:center; padding: 20px;">Nessun background presente negli archivi dell\'Isola.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const docId = doc.id;
+                    const dataInvio = data.submittedAt ? data.submittedAt.toDate().toLocaleString('it-IT') : 'Data Sconosciuta';
+                    const userDiscord = data.discordUser || 'N/A';
+                    const reviewerText = data.reviewedBy ? ` — Gestito da: <strong>${data.reviewedBy}</strong>` : '';
+                    
+                    let statusBadge = '';
+                    if (data.status === 'approvato') statusBadge = '<span style="color:#00ff80;">[APPROVATO]</span>';
+                    if (data.status === 'da_revisionare') statusBadge = '<span style="color:#ffcc00;">[DA REVISIONARE]</span>';
+                    if (data.status === 'da_modificare') statusBadge = '<span style="color:#ff4d4d;">[DA MODIFICARE]</span>';
+
+                    const bgItem = document.createElement('div');
+                    bgItem.className = 'bg-item';
+                    bgItem.setAttribute('id', 'item_' + docId);
+                    
+                    bgItem.innerHTML = `
+                        <div class="bg-item-header">
+                            <div class="bg-item-info">
+                                <h3>${data.name} (Ombra: ${data.shadowName}) ${statusBadge}</h3>
+                                <div class="bg-meta">Discord: <strong>${userDiscord}</strong> — Ricevuto il: ${dataInvio}${reviewerText}</div>
+                            </div>
+                            <button class="btn" id="btnToggleGM_${docId}" onclick="toggleGmItemDetails('${docId}')" style="width: auto; padding: 10px 24px; font-size: 0.85rem;">Visualizza</button>
+                        </div>
+                        
+                        <div id="details_${docId}" class="gm-extended-details hidden">
+                            <div class="voice-box"><strong>Nome Utente Discord</strong><p>${userDiscord}</p></div>
+                            <div class="voice-box"><strong>Nome Personaggio</strong><p>${data.name}</p></div>
+                            <div class="voice-box"><strong>Nome Ombra</strong><p>${data.shadowName}</p></div>
+                            <div class="voice-box"><strong>Storia del Personaggio (Il Passato)</strong><p>${data.history}</p></div>
+                            <div class="voice-box"><strong>Eventi Significativi</strong><p>${data.events}</p></div>
+                            <div class="voice-box"><strong>Arrivo sull'Isola</strong><p>${data.arrival}</p></div>
+                            <div class="voice-box"><strong>Legami</strong><p>${data.bonds}</p></div>
+                            <div class="voice-box"><strong>Carattere</strong><p>${data.character}</p></div>
+                            <div class="voice-box"><strong>Obiettivi</strong><p>${data.objectives}</p></div>
+                            <div class="voice-box"><strong>Paure</strong><p>${data.fears}</p></div>
+                            
+                            ${data.feedback ? `<div class="feedback-box" style="margin-bottom:15px;"><strong>Nota Attuale in Archivio${data.reviewedBy ? ' (GM: ' + data.reviewedBy + ')' : ''}:</strong> ${data.feedback}</div>` : ''}
+
+                            <div class="gm-actions">
+                                <label style="font-size:0.85rem; margin-bottom:4px; color: var(--bright-crimson); font-weight: bold;">Firma GM (Obbligatorio)</label>
+                                <input type="text" id="gmSignature_${docId}" placeholder="Inserisci il tuo nome GM..." value="${data.reviewedBy || ''}" style="margin-bottom: 12px;">
+
+                                <label style="font-size:0.85rem; margin-bottom:4px;">Istruzioni di Modifica / Commento di Rifiuto</label>
+                                <textarea id="feedback_${docId}" placeholder="Specifica qui cosa l'utente deve correggere sul suo PC...">${data.feedback || ''}</textarea>
+                                <div class="gm-buttons-group">
+                                    <button class="btn btn-approve" onclick="reviewBackground('${docId}', 'approvato')">Approva Background</button>
+                                    <button class="btn btn-reject" onclick="reviewBackground('${docId}', 'da_modificare')">Richiedi Modifiche</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    gmListContainer.appendChild(bgItem);
+                });
+            }, error => {
+                console.error("Errore di caricamento dati GM: ", error);
+            });
+        }
+
+        // Funzione per espandere/comprimere le schede GM
+        window.toggleGmItemDetails = function(docId) {
+            const detailsDiv = document.getElementById('details_' + docId);
+            const toggleBtn = document.getElementById('btnToggleGM_' + docId);
+            const parentCard = document.getElementById('item_' + docId);
+
+            if (detailsDiv.classList.contains('hidden')) {
+                detailsDiv.classList.remove('hidden');
+                toggleBtn.innerText = 'Chiudi';
+                parentCard.style.borderColor = 'var(--bright-crimson)';
+            } else {
+                detailsDiv.classList.add('hidden');
+                toggleBtn.innerText = 'Visualizza';
+                parentCard.style.borderColor = '#331414';
+            }
+        };
+
+        // EMISSIONE DELLA SENTENZA DEL GM
+        window.reviewBackground = function(docId, nextStatus) {
+            const feedbackText = document.getElementById(`feedback_${docId}`).value.trim();
+            const gmSignature = document.getElementById(`gmSignature_${docId}`).value.trim();
+
+            if (!gmSignature) {
+                triggerChronicaAlert('Firma Mancante', 'Devi inserire il tuo nome GM prima di confermare l\'azione.');
+                return;
+            }
+
+            if (nextStatus === 'da_modificare' && !feedbackText) {
+                triggerChronicaAlert('Nota mancante', 'Devi inserire una nota scritta per spiegare al giocatore le modifiche da apportare.');
+                return;
+            }
+
+            const updateData = {
+                status: nextStatus,
+                feedback: nextStatus === 'approvato' ? '' : feedbackText,
+                reviewedBy: gmSignature
+            };
+
+            db.collection('backgrounds').doc(docId).update(updateData)
+                .then(() => {
+                    triggerChronicaAlert('Stato modificato', 'Il giocatore è stato informato della decisione presa.');
+                })
+                .catch(error => {
+                    triggerChronicaAlert('Errore Di Registro', 'Impossibile aggiornare lo stato: ' + error.message);
+                });
+        };
+    </script>
+</body>
+</html>
