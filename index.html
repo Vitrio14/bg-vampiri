@@ -712,12 +712,12 @@
                 <div id="userStatusContainer" class="hidden"></div>
                 
                 <h2>Compila il tuo Background</h2>
-                <p class="subtitle">Tutti i campi sono obbligatori per iniziare la tua avventura.</p>
+                <p class="subtitle">Tutti i campi sono obbligatori per l'invio.</p>
                 
                 <form id="bgForm">
                     <div class="form-group">
                         <label for="discordUser">Nome Utente Discord</label>
-                        <span class="guide-text">Inserisci il tuo ID utente di Discord completo (es: nomeutente o vecchio formato nome#0000) per permettere ai GM di contattarti rapidamente per i rituali.</span>
+                        <span class="guide-text">Inserisci il tuo ID utente di Discord completo (es: nomeutente o vecchio formato nome#0000).</span>
                         <input type="text" id="discordUser" required>
                     </div>
 
@@ -741,7 +741,7 @@
 
                     <div class="form-group">
                         <label for="events">Eventi Significativi</label>
-                        <span class="guide-text">Elenca almeno due o tre eventi che hanno cambiato radicalmente la vita del personaggio. Può trattarsi di un grande successo, di un trauma, di una perdita o del momento esatto in cui ha scoperto l'esistenza del sovrannaturale. Questi dettagli aiuteranno i GM a creare le prove per i tuoi rituali.</span>
+                        <span class="guide-text">Elenca almeno due o tre eventi che hanno cambiato radicalmente la vita del personaggio. Può trattarsi di un grande successo, di un trauma, di una perdita o del momento esatto in cui ha scoperto l'esistenza del sovrannaturale.</span>
                         <textarea id="events" required></textarea>
                     </div>
 
@@ -759,7 +759,7 @@
 
                     <div class="form-group">
                         <label for="character">Carattere</label>
-                        <span class="guide-text">Descrivi la psicologia del tuo personaggio. Non limitarti a "buono" o "cattivo". Spiega come reagisce davanti al pericolo, come si comporta con gli sconosciuti, se è impulsivo, calcolatore, vendicativo o empatico. Nota: questa sezione sarà fondamentale per i GM.</span>
+                        <span class="guide-text">Descrivi la psicologia del tuo personaggio. Non limitarti a "buono" o "cattivo". Spiega come reagisce davanti al pericolo, come si comporta con gli sconosciuti, se è impulsivo, calcolatore, vendicativo o empatico.</span>
                         <textarea id="character" required></textarea>
                     </div>
 
@@ -771,7 +771,7 @@
 
                     <div class="form-group">
                         <label for="fears">Paure</label>
-                        <span class="guide-text">Ogni personaggio deve avere dei punti deboli. Indica quali sono le fobie fisiche o i traumi psicologici del tuo personaggio. Le paure rendono il gioco di ruolo più profondo e offrono ai GM spunti fantastici per creare incubi o indovinelli durante le quest.</span>
+                        <span class="guide-text">Ogni personaggio deve avere dei punti deboli. Indica quali sono le fobie fisiche o i traumi psicologici del tuo personaggio. Le paure rendono il gioco di ruolo più profondo.</span>
                         <textarea id="fears" required></textarea>
                     </div>
 
@@ -1129,7 +1129,7 @@ const firebaseConfig = {
                 gmListContainer.innerHTML = '';
 
                 if (snapshot.empty) {
-                    gmListContainer.innerHTML = '<p style="color: var(--text-dim); text-align:center; padding: 20px;">Nessun background presente.</p>';
+                    gmListContainer.innerHTML = '<p style="color: var(--text-dim); text-align:center; padding: 20px;">Nessun background presente negli archivi.</p>';
                     return;
                 }
 
