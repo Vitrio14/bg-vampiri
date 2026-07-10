@@ -323,7 +323,7 @@ bgForm.addEventListener('submit', (e) => {
                 "https://discord.com/api/webhooks/1525137419567890635/48cnj0-0COKJ5EEjkKuMHba0KIGlghz8O4G0D8mLND-mhEjINUa3BMBexxQoVKpwLPMY",
                 "<@&1284193565194326189>", // Tag ruolo GM fuori dall'embed
                 "Horde V5 | Nuovo Background Ricevuto",
-                "È stato inviato un nuovo background in attesa di revisione da parte di un GM Collegati al seguente link: https://horde-bg-vampiri.vitriotv.com.",
+                "È stato inviato un nuovo background in attesa di revisione da parte di un GM, collegati al seguente link: https://horde-bg-vampiri.vitriotv.com.",
                 0x8b0000, 
                 [
                     { name: "👤 Discord User", value: finalPayload.discordUser, inline: true },
