@@ -53,7 +53,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-const GM_EMAIL = 'gm@horde.it';
+const GM_EMAIL = 'gm.vampiri@horde.it';
 let deviceToken = '';
 let gmSnapshotUnsubscribe = null;
 
