@@ -367,101 +367,185 @@ document.getElementById('btnLogOutAction').addEventListener('click', () => {
     auth.signOut();
 });
 
+// ==========================================
+// DASHBOARD GM — TAB + VISTA DETTAGLIO
+// ==========================================
+let allBackgroundsCache = [];
+let currentGmTab = 'da_revisionare';
+let currentDetailDocId = null;
+
+const gmListView = document.getElementById('gmListView');
+const gmDetailView = document.getElementById('gmDetailView');
+const gmDetailContent = document.getElementById('gmDetailContent');
+
+// Tab click handlers
+document.querySelectorAll('.gm-tab').forEach(tabBtn => {
+    tabBtn.addEventListener('click', () => {
+        document.querySelectorAll('.gm-tab').forEach(t => t.classList.remove('active'));
+        tabBtn.classList.add('active');
+        currentGmTab = tabBtn.getAttribute('data-tab');
+        renderGmList();
+    });
+});
+
+// Torna alla lista dalla vista dettaglio
+document.getElementById('btnBackToList').addEventListener('click', () => {
+    showGmListView();
+});
+
+function showGmListView() {
+    gmDetailView.classList.add('hidden');
+    gmListView.classList.remove('hidden');
+    currentDetailDocId = null;
+}
+
+function showGmDetailView() {
+    gmListView.classList.add('hidden');
+    gmDetailView.classList.remove('hidden');
+}
+
 // CARICAMENTO IN DIRETTA DEI BACKGROUND RICEVUTI
 function loadGmDashboard() {
     if (gmSnapshotUnsubscribe) gmSnapshotUnsubscribe();
 
+    showGmListView();
+    currentGmTab = 'da_revisionare';
+    document.querySelectorAll('.gm-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tabDaRevisionare').classList.add('active');
+
     gmSnapshotUnsubscribe = db.collection('backgrounds').orderBy('submittedAt', 'desc').onSnapshot(snapshot => {
-        gmListContainer.innerHTML = '';
-
-        if (snapshot.empty) {
-            gmListContainer.innerHTML = '<p style="color: var(--text-dim); text-align:center; padding: 20px;">Nessun background presente negli archivi.</p>';
-            return;
-        }
-
+        allBackgroundsCache = [];
         snapshot.forEach(doc => {
-            const data = doc.data();
-            const docId = doc.id;
-            const dataInvio = data.submittedAt ? data.submittedAt.toDate().toLocaleString('it-IT') : 'Data Sconosciuta';
-            const userDiscord = data.discordUser || 'N/A';
-            const reviewerText = data.reviewedBy ? ` — Gestito da: <strong>${data.reviewedBy}</strong>` : '';
-            
-            let statusBadge = '';
-            if (data.status === 'approvato') statusBadge = '<span style="color:var(--success-green);">[APPROVATO]</span>';
-            if (data.status === 'da_revisionare') statusBadge = '<span style="color:var(--gold-accent);">[DA REVISIONARE]</span>';
-            if (data.status === 'da_modificare') statusBadge = '<span style="color:var(--withdraw-red);">[DA MODIFICARE]</span>';
-
-            const bgItem = document.createElement('div');
-            bgItem.className = 'bg-item';
-            bgItem.setAttribute('id', 'item_' + docId);
-            
-            bgItem.setAttribute('data-discord', userDiscord);
-            bgItem.setAttribute('data-char', data.name);
-            
-            bgItem.innerHTML = `
-                <div class="bg-item-header">
-                    <div class="bg-item-info">
-                        <h3>${data.name} (Ombra: ${data.shadowName}) ${statusBadge}</h3>
-                        <div class="bg-meta">Discord: <strong>${userDiscord}</strong> — Ricevuto il: ${dataInvio}${reviewerText}</div>
-                    </div>
-                    <button class="btn" id="btnToggleGM_${docId}" onclick="toggleGmItemDetails('${docId}')" style="width: auto; padding: 10px 24px; font-size: 0.75rem;">Visualizza</button>
-                </div>
-                
-                <div id="details_${docId}" class="gm-extended-details hidden">
-                    <div class="voice-box"><strong>Nome Utente Discord</strong><p>${userDiscord}</p></div>
-                    <div class="voice-box"><strong>Nome Personaggio</strong><p>${data.name}</p></div>
-                    <div class="voice-box"><strong>Nome Ombra</strong><p>${data.shadowName}</p></div>
-                    <div class="voice-box"><strong>Storia del Personaggio (Il Passato)</strong><p>${data.history}</p></div>
-                    <div class="voice-box"><strong>Eventi Significativi</strong><p>${data.events}</p></div>
-                    <div class="voice-box"><strong>Arrivo sull'Isola</strong><p>${data.arrival}</p></div>
-                    <div class="voice-box"><strong>Legami</strong><p>${data.bonds}</p></div>
-                    <div class="voice-box"><strong>Carattere</strong><p>${data.character}</p></div>
-                    <div class="voice-box"><strong>Obiettivi</strong><p>${data.objectives}</p></div>
-                    <div class="voice-box"><strong>Paure</strong><p>${data.fears}</p></div>
-                    
-                    ${data.feedback ? `<div class="feedback-box" style="margin-bottom:15px;"><strong>Nota Attuale in Archivio${data.reviewedBy ? ' (GM: ' + data.reviewedBy + ')' : ''}:</strong> ${data.feedback}</div>` : ''}
-
-                    <div class="gm-actions">
-                        <label style="font-size:0.75rem; margin-bottom:8px; color: var(--gold-accent); font-weight: bold;">Firma GM (Obbligatorio)</label>
-                        <input type="text" id="gmSignature_${docId}" placeholder="Inserisci il tuo nome GM..." value="${data.reviewedBy || ''}" style="margin-bottom: 15px;">
-
-                        <label style="font-size:0.75rem; margin-bottom:8px;">Istruzioni di Modifica / Commento di Rifiuto</label>
-                        <textarea id="feedback_${docId}" placeholder="Specifica qui cosa l'utente deve correggere sul suo PC..." style="margin-bottom: 15px;">${data.feedback || ''}</textarea>
-                        <div class="gm-buttons-group">
-                            <button class="btn btn-approve" onclick="reviewBackground('${docId}', 'approvato')">Approva Background</button>
-                            <button class="btn btn-reject" onclick="reviewBackground('${docId}', 'da_modificare')">Richiedi Modifiche</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            gmListContainer.appendChild(bgItem);
+            allBackgroundsCache.push({ id: doc.id, ...doc.data() });
         });
+        updateTabCounts();
+        renderGmList();
+
+        if (currentDetailDocId) {
+            const stillExists = allBackgroundsCache.find(b => b.id === currentDetailDocId);
+            if (stillExists) {
+                openGmDetail(currentDetailDocId);
+            } else {
+                showGmListView();
+            }
+        }
     }, error => {
         console.error("Errore di caricamento dati GM: ", error);
     });
 }
 
-// Funzione globale per espandere/comprimere le schede GM
-window.toggleGmItemDetails = function(docId) {
-    const detailsDiv = document.getElementById('details_' + docId);
-    const toggleBtn = document.getElementById('btnToggleGM_' + docId);
-    const parentCard = document.getElementById('item_' + docId);
+function updateTabCounts() {
+    const countRev = allBackgroundsCache.filter(b => b.status === 'da_revisionare').length;
+    const countMod = allBackgroundsCache.filter(b => b.status === 'da_modificare').length;
+    const countApp = allBackgroundsCache.filter(b => b.status === 'approvato').length;
 
-    if (detailsDiv.classList.contains('hidden')) {
-        detailsDiv.classList.remove('hidden');
-        toggleBtn.innerText = 'Chiudi';
-        parentCard.style.borderColor = 'var(--gold-accent)';
-    } else {
-        detailsDiv.classList.add('hidden');
-        toggleBtn.innerText = 'Visualizza';
-        parentCard.style.borderColor = 'var(--glass-border)';
+    document.getElementById('countDaRevisionare').innerText = countRev;
+    document.getElementById('countDaModificare').innerText = countMod;
+    document.getElementById('countApprovati').innerText = countApp;
+}
+
+function renderGmList() {
+    gmListContainer.innerHTML = '';
+
+    const filtered = allBackgroundsCache.filter(b => b.status === currentGmTab);
+
+    if (filtered.length === 0) {
+        let emptyMsg = 'Nessun background in questa sezione.';
+        if (currentGmTab === 'da_revisionare') emptyMsg = 'Nessun background in attesa di revisione.';
+        if (currentGmTab === 'da_modificare') emptyMsg = 'Nessun background con richieste di modifica.';
+        if (currentGmTab === 'approvato') emptyMsg = 'Nessun background approvato.';
+        gmListContainer.innerHTML = '<p style="color: var(--text-dim); text-align:center; padding: 20px;">' + emptyMsg + '</p>';
+        return;
     }
+
+    filtered.forEach(data => {
+        const docId = data.id;
+        const dataInvio = data.submittedAt ? data.submittedAt.toDate().toLocaleString('it-IT') : 'Data Sconosciuta';
+        const userDiscord = data.discordUser || 'N/A';
+        const reviewerText = data.reviewedBy ? ' — Gestito da: <strong>' + data.reviewedBy + '</strong>' : '';
+
+        let statusBadge = '';
+        if (data.status === 'approvato') statusBadge = '<span style="color:var(--success-green);">[APPROVATO]</span>';
+        if (data.status === 'da_revisionare') statusBadge = '<span style="color:var(--gold-accent);">[DA REVISIONARE]</span>';
+        if (data.status === 'da_modificare') statusBadge = '<span style="color:var(--withdraw-red);">[DA MODIFICARE]</span>';
+
+        const bgItem = document.createElement('div');
+        bgItem.className = 'bg-item';
+        bgItem.setAttribute('id', 'item_' + docId);
+        bgItem.setAttribute('data-discord', userDiscord);
+        bgItem.setAttribute('data-char', data.name || '');
+
+        const charLabel = (data.name || 'Senza nome') + ' (Ombra: ' + (data.shadowName || '-') + ') ' + statusBadge;
+        bgItem.innerHTML =
+            '<div class="bg-item-header">' +
+                '<div class="bg-item-info">' +
+                    '<h3>' + charLabel + '</h3>' +
+                    '<div class="bg-meta">Discord: <strong>' + userDiscord + '</strong> — Ricevuto il: ' + dataInvio + reviewerText + '</div>' +
+                '</div>' +
+                '<button class="btn" onclick="openGmDetail(\'' + docId + '\')" style="width: auto; padding: 10px 24px; font-size: 0.75rem;">Visualizza</button>' +
+            '</div>';
+        gmListContainer.appendChild(bgItem);
+    });
+}
+
+// Apre la vista dettaglio a pagina intera
+window.openGmDetail = function(docId) {
+    const data = allBackgroundsCache.find(b => b.id === docId);
+    if (!data) return;
+
+    currentDetailDocId = docId;
+    const dataInvio = data.submittedAt ? data.submittedAt.toDate().toLocaleString('it-IT') : 'Data Sconosciuta';
+    const userDiscord = data.discordUser || 'N/A';
+
+    let bannerHTML = '';
+    if (data.status === 'da_revisionare') {
+        bannerHTML = '<div class="status-banner status-da_revisionare">Inviato il ' + dataInvio + ' — IN FASE DI REVISIONE</div>';
+    } else if (data.status === 'approvato') {
+        bannerHTML = '<div class="status-banner status-approvato">Inviato il ' + dataInvio + ' — BACKGROUND APPROVATO' + (data.reviewedBy ? ' (da ' + data.reviewedBy + ')' : '') + '</div>';
+    } else if (data.status === 'da_modificare') {
+        bannerHTML = '<div class="status-banner status-da_modificare">Richiesta di Modifica necessaria' + (data.reviewedBy ? ' (da ' + data.reviewedBy + ')' : '') + '</div>';
+    }
+
+    const feedbackBox = data.feedback
+        ? '<div class="feedback-box" style="margin-bottom:15px;"><strong>Nota Attuale in Archivio' + (data.reviewedBy ? ' (GM: ' + data.reviewedBy + ')' : '') + ':</strong> ' + data.feedback + '</div>'
+        : '';
+
+    gmDetailContent.innerHTML =
+        bannerHTML +
+        '<h3 style="margin-bottom: 20px;">' + (data.name || 'Senza nome') + ' — Ombra: ' + (data.shadowName || '-') + '</h3>' +
+        '<div class="voice-box"><strong>Nome Utente Discord</strong><p>' + userDiscord + '</p></div>' +
+        '<div class="voice-box"><strong>Nome Personaggio</strong><p>' + (data.name || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Nome Ombra</strong><p>' + (data.shadowName || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Storia del Personaggio (Il Passato)</strong><p>' + (data.history || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Eventi Significativi</strong><p>' + (data.events || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Arrivo sull\'Isola</strong><p>' + (data.arrival || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Legami</strong><p>' + (data.bonds || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Carattere</strong><p>' + (data.character || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Obiettivi</strong><p>' + (data.objectives || '-') + '</p></div>' +
+        '<div class="voice-box"><strong>Paure</strong><p>' + (data.fears || '-') + '</p></div>' +
+        feedbackBox +
+        '<div class="gm-actions">' +
+            '<label style="font-size:0.75rem; margin-bottom:8px; color: var(--gold-accent); font-weight: bold;">Firma GM (Obbligatorio)</label>' +
+            '<input type="text" id="gmSignature_detail" placeholder="Inserisci il tuo nome GM..." value="' + (data.reviewedBy || '') + '" style="margin-bottom: 15px;">' +
+            '<label style="font-size:0.75rem; margin-bottom:8px;">Istruzioni di Modifica / Commento di Rifiuto</label>' +
+            '<textarea id="feedback_detail" placeholder="Specifica qui cosa l\'utente deve correggere sul suo PC..." style="margin-bottom: 15px;">' + (data.feedback || '') + '</textarea>' +
+            '<div class="gm-buttons-group">' +
+                '<button class="btn btn-approve" onclick="reviewBackground(\'' + docId + '\', \'approvato\')">Approva Background</button>' +
+                '<button class="btn btn-reject" onclick="reviewBackground(\'' + docId + '\', \'da_modificare\')">Richiedi Modifiche</button>' +
+            '</div>' +
+        '</div>';
+
+    showGmDetailView();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 // EMISSIONE DELLA SENTENZA DEL GM
 window.reviewBackground = function(docId, nextStatus) {
-    const feedbackText = document.getElementById(`feedback_${docId}`).value.trim();
-    const gmSignature = document.getElementById(`gmSignature_${docId}`).value.trim();
+    const feedbackEl = document.getElementById('feedback_detail') || document.getElementById('feedback_' + docId);
+    const signatureEl = document.getElementById('gmSignature_detail') || document.getElementById('gmSignature_' + docId);
+
+    const feedbackText = feedbackEl ? feedbackEl.value.trim() : '';
+    const gmSignature = signatureEl ? signatureEl.value.trim() : '';
 
     if (!gmSignature) {
         triggerChronicaAlert('Firma Mancante', 'Devi inserire il tuo nome GM prima di confermare l\'azione.');
@@ -473,6 +557,10 @@ window.reviewBackground = function(docId, nextStatus) {
         return;
     }
 
+    const data = allBackgroundsCache.find(b => b.id === docId);
+    const userDiscord = data ? (data.discordUser || 'Sconosciuto') : 'Sconosciuto';
+    const charName = data ? (data.name || 'Sconosciuto') : 'Sconosciuto';
+
     const updateData = {
         status: nextStatus,
         feedback: nextStatus === 'approvato' ? '' : feedbackText,
@@ -481,38 +569,43 @@ window.reviewBackground = function(docId, nextStatus) {
 
     db.collection('backgrounds').doc(docId).update(updateData)
         .then(() => {
-            
-            // WEBHOOK REVISIONE GM
-            const itemEl = document.getElementById('item_' + docId);
-            const userDiscord = itemEl ? itemEl.getAttribute('data-discord') : "Sconosciuto";
-            const charName = itemEl ? itemEl.getAttribute('data-char') : "Sconosciuto";
-            
             const isApproved = nextStatus === 'approvato';
             const embedFields = [
-                { name: "👤 Discord User", value: userDiscord, inline: true },
-                { name: "🦇 Nome Personaggio", value: charName, inline: true },
-                { name: "📜 Esito", value: isApproved ? "✅ Approvato" : "❌ Da Modificare", inline: false }
+                { name: "Discord User", value: userDiscord, inline: true },
+                { name: "Nome Personaggio", value: charName, inline: true },
+                { name: "Esito", value: isApproved ? "Approvato" : "Da Modificare", inline: false }
             ];
 
-            let embedDescription = `Il GameMaster **${gmSignature}** ha completato la revisione.`;
-            
+            let embedDescription = 'Il GameMaster **' + gmSignature + '** ha completato la revisione.';
+
             if (isApproved) {
-                embedDescription += "\n\n**Il tuo background è stato accettato. Non ci sono altre azioni da compiere.**";
+                embedDescription += '\n\n**Il tuo background è stato accettato. Non ci sono altre azioni da compiere.**';
             } else {
-                embedDescription += "\n\n**Sono richieste delle modifiche.**\nCollegati al sito per correggere e rinviare: https://horde-bg-vampiri.vitriotv.com";
-                embedFields.push({ name: "📝 Note/Istruzioni dal GM", value: feedbackText, inline: false });
+                embedDescription += '\n\n**Sono richieste delle modifiche.**\nCollegati al sito per correggere e rinviare: https://horde-bg-vampiri.vitriotv.com';
+                embedFields.push({ name: "Note/Istruzioni dal GM", value: feedbackText, inline: false });
             }
 
             sendDiscordWebhook(
                 "https://discord.com/api/webhooks/1525137091573317724/HpEhlcQz7NF4csUT92wJiu_xKGnPK2-hiYk4C0eTqkJQFl6h11gdFt9mfCICcqy80jlH",
-                `<@${userDiscord}>`, 
+                '<@' + userDiscord + '>',
                 isApproved ? "Horde V5 | Background Approvato" : "Horde V5 | Richiesta Modifiche Background",
                 embedDescription,
-                isApproved ? 0x2ecc71 : 0xe74c3c, 
+                isApproved ? 0x2ecc71 : 0xe74c3c,
                 embedFields
             );
 
-            triggerChronicaAlert('Stato modificato', 'Il giocatore è stato informato della decisione presa.');
+            triggerChronicaAlert('Stato modificato', 'Il giocatore è stato informato della decisione presa.', () => {
+                if (nextStatus === 'approvato') {
+                    currentGmTab = 'approvato';
+                    document.querySelectorAll('.gm-tab').forEach(t => t.classList.remove('active'));
+                    document.getElementById('tabApprovati').classList.add('active');
+                } else if (nextStatus === 'da_modificare') {
+                    currentGmTab = 'da_modificare';
+                    document.querySelectorAll('.gm-tab').forEach(t => t.classList.remove('active'));
+                    document.getElementById('tabDaModificare').classList.add('active');
+                }
+                showGmListView();
+            });
         })
         .catch(error => {
             triggerChronicaAlert('Errore Di Registro', 'Impossibile aggiornare lo stato: ' + error.message);

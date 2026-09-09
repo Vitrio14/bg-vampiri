@@ -166,7 +166,23 @@
                 </div>
                 <p class="subtitle">Esamina i background inviati dai giocatori.</p>
 
-                <div id="gmListContainer" class="gm-scroll-container"></div>
+                <!-- Vista Lista con Tab -->
+                <div id="gmListView">
+                    <div class="gm-tabs">
+                        <button class="gm-tab active" data-tab="da_revisionare" id="tabDaRevisionare">Da Revisionare <span class="tab-count" id="countDaRevisionare">0</span></button>
+                        <button class="gm-tab" data-tab="da_modificare" id="tabDaModificare">Da Modificare <span class="tab-count" id="countDaModificare">0</span></button>
+                        <button class="gm-tab" data-tab="approvato" id="tabApprovati">Approvati <span class="tab-count" id="countApprovati">0</span></button>
+                    </div>
+                    <div id="gmListContainer" class="gm-scroll-container"></div>
+                </div>
+
+                <!-- Vista Dettaglio Singolo Background -->
+                <div id="gmDetailView" class="hidden">
+                    <div class="gm-detail-header">
+                        <button class="nav-link-btn" id="btnBackToList">← Torna alla lista</button>
+                    </div>
+                    <div id="gmDetailContent"></div>
+                </div>
             </div>
 
         </div>
